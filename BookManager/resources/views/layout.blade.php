@@ -10,20 +10,28 @@
 <body>
   
   <!-- nav bar -->
-  <div class="navbar navbar-dark bg-dark">
-      <div class="col-xs-12 col-sm-6 offset-sm-3 col-md-6 offset-md-3">
-
-        <ul class="nav justify-content-center">
-          <li class="nav-item">
-            <a class="nav-link" href="/">See All Books</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="/api/books/create">Add a Book</a>
-          </li>
-        </ul>
-        
+  <nav class="navbar navbar-dark bg-dark navbar-expand-lg">
+    <!-- nav bar Links-->
+    <ul class="nav">
+      <li class="nav-item">
+        <a class="nav-link" href="/">See All Books</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/api/books/create">Add a Book</a>
+      </li>
+    </ul>
+    <!-- nav bar Links ends here-->
+    <!-- search bar -->
+    <form class="form-inline ml-auto" method="get" action="{{ route('books.query') }}">
+      <div class="md-form my-0">
+        <input class="form-control" type="text" placeholder="Search Books" name="search" id='search'>
+        <button type="submit" class="btn btn-default">
+          <i class="fas fa-search text-white" name="searchButton" aria-hidden="true"></i>
+        </button>
       </div>
-  </div>
+    </form>
+    <!-- search bar ends here-->
+  </nav>
   <!-- nav bar ends here -->
   <div class="container">
     @yield('content')

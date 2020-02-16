@@ -19,6 +19,21 @@ class BookController extends Controller
     }
 
     /**
+     * Display a listing of based on a query
+     * @param  string searchTerm the string to search
+     * @return \Illuminate\Http\Response
+     */
+    public static function query(Request $request)
+    { 
+        $books = Book::query()
+                ->where('title', 'LIKE', "%{$request->get('search')}%") 
+                ->orWhere('author', 'LIKE', "%{$request->get('search')}%") 
+                -> sortable()->paginate(5);
+        return view('indexBook', compact('books'));
+    }
+
+
+    /**
      * Show the form for creating a new Book.
      * 
      * @return \Illuminate\Http\Response

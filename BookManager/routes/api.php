@@ -20,5 +20,7 @@ Route::get('/', function () {
     return redirect()->action('BookController@index');;
 });
 
-
+Route::get('/books/query', 'BookController@query') -> name('books.query'); 
 Route::resource('books', 'BookController');
+
+
