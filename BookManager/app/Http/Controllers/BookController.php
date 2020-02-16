@@ -9,18 +9,18 @@ class BookController extends Controller
 {
     /**
      * Display a listing of books
-     *
+     * 
      * @return \Illuminate\Http\Response
      */
     public static function index()
     {
-        $books = Book::all();
+        $books = Book::sortable()->paginate(5);
         return view('indexBook', compact('books'));
     }
 
     /**
      * Show the form for creating a new Book.
-     *
+     * 
      * @return \Illuminate\Http\Response
      */
     public static function create()
@@ -63,7 +63,8 @@ class BookController extends Controller
      */
     public function edit($id)
     {
-        //
+        $book = Book::findOrFail($id);
+        return view('editBook', compact('book'));
     }
 
     /**
@@ -75,18 +76,27 @@ class BookController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        
+        $validatedData = $request->validate([
+            'author' => 'required|max:255',
+            
+        ]);
+        Book::whereId($id)->update($validatedData);
+
+        return redirect('/api/books')->with('success', 'Author was successfully updated');
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Remove the specified book from storage.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
     {
-        //
+        $book = Book::findOrFail($id);
+        $book->delete();
+        return redirect('/api/books')->with('success', 'Book was successfully deleted');
     }
 
 }

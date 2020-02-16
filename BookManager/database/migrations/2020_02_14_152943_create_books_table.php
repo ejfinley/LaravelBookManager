@@ -19,6 +19,8 @@ class CreateBooksTable extends Migration
             $table->string('author');
             $table->timestamps();
         });
+
+
     }
 
     /**
