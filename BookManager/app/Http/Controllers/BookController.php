@@ -4,9 +4,16 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Book;
+use App\Exports\BooksExport;
+use App\Exports\AuthorsExport;
+use App\Exports\TitlesExport;
+use Illuminate\Support\Facades\Response;
+use Maatwebsite\Excel\Facades\Excel;
+use DB;
 
 class BookController extends Controller
 {
+
     /**
      * Display a listing of books
      * 
@@ -31,6 +38,65 @@ class BookController extends Controller
                 -> sortable()->paginate(5);
         return view('indexBook', compact('books'));
     }
+    /**
+     * Export database based on a format and filter variable
+     * @param  string searchTerm the string to search
+     * @return \Illuminate\Http\Response
+     */
+    public static function export(Request $request)
+    {  
+       //Excel is handled by a library
+       if($request->get('format') == 'csv'){
+            if($request->get('filter') == 'author'){
+                return Excel::download(new AuthorsExport, 'authors.csv');
+            } else if ($request->get('filter') == 'title'){
+                return Excel::download(new TitlesExport, 'titles.csv');
+            } else if ($request->get('filter') == 'both'){      
+                return Excel::download(new BooksExport, 'books.csv');
+            }    
+        // We will format the xml
+       } else if ($request->get('format') == 'xml'){
+            $books = Book::All();
+            $xml = new \XMLWriter();
+            $xml->openMemory();
+            $xml->setIndent(true);
+            $xml->startDocument('1.0');
+            if($request->get('filter') == 'author'){
+                $xml->startElement('authors');
+                foreach ($books as $book) {
+                    $xml->writeElement('author', $book->author);
+                }
+                $xml->endElement();
+            } else if ($request->get('filter') == 'title'){
+                $xml->startElement('titles');
+                 foreach ($books as $book) {
+                    $xml->writeElement('title', $book->title);
+                }
+                $xml->endElement();
+            } else if ($request->get('filter') == 'both'){      
+                $xml->startElement('books');
+                 foreach ($books as $book) {
+                    $xml->startElement('book');
+                    $xml->writeElement('title', $book->title);
+                    $xml->writeElement('author', $book->author);
+                    $xml->endElement();
+                }
+                $xml->endElement();
+            }
+            $content = $xml->outputMemory();
+            $response = Response::make($content, 200);
+            $response->header('Content-Type', 'text/xml');
+            $response->header('Cache-Control', 'public');
+            $response->header('Content-Description', 'File Transfer');
+            $response->header('Content-Disposition', 'attachment; filename=' . $request->get('filter')  . 'xml');
+            $response->header('Content-Transfer-Encoding', 'binary');
+            return $response;
+       }
+      
+       
+
+    }
+
 
 
     /**
@@ -41,6 +107,16 @@ class BookController extends Controller
     public static function create()
     {
         return view('createBook');
+    }
+    
+    /**
+     * Show the page for export options
+     * 
+     * @return \Illuminate\Http\Response
+     */
+    public static function exportPage()
+    {
+        return view('exportBook');
     }
 
     /**

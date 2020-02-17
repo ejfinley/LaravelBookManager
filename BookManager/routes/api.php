@@ -19,7 +19,8 @@ use Illuminate\Http\Request;
 Route::get('/', function () {
     return redirect()->action('BookController@index');;
 });
-
+Route::get('/books/exportoptions', 'BookController@exportPage') -> name('books.exportpage'); 
+Route::get('/books/export', 'BookController@export') -> name('books.export'); 
 Route::get('/books/query', 'BookController@query') -> name('books.query'); 
 Route::resource('books', 'BookController');
 

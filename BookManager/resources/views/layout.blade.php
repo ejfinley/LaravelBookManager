@@ -8,6 +8,7 @@
   <link href="{{ asset('css/app.css') }}" rel="stylesheet" type="text/css" />
 </head>
 <body>
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
   
   <!-- nav bar -->
   <nav class="navbar navbar-dark bg-dark navbar-expand-lg">
@@ -19,8 +20,12 @@
       <li class="nav-item">
         <a class="nav-link" href="/api/books/create">Add a Book</a>
       </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/api/books/exportoptions">Export Data</a>
+      </li>
+      <!-- nav bar Links ends here-->
+
     </ul>
-    <!-- nav bar Links ends here-->
     <!-- search bar -->
     <form class="form-inline ml-auto" method="get" action="{{ route('books.query') }}">
       <div class="md-form my-0">
@@ -36,7 +41,6 @@
   <div class="container">
     @yield('content')
   </div>
-  <!--Footer section for future Exporting -->
   <script src="{{ asset('js/app.js') }}" type="text/js"></script>
 </body>
 </html>
